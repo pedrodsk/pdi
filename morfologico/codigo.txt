@@ -1,0 +1,79 @@
+import cv2 as cv
+import numpy as np
+import matplotlib.pyplot as plt
+
+#Definições Gerais
+
+kernelSize = [(3,3), (5,5), (7,7), (9,9), (11,11)] #Dimensão do kernel
+
+kernel = cv.getStructuringElement(cv.MORPH_CROSS,kernelSize[2])
+
+#Possíveis Kernel: 
+#Elipse -> cv.MORPH_ELLIPSE/ Retângulo -> cv.MORPH.RECT/ Cruz -> cv.MORPH_CROSS
+
+
+#Carregamento da Imagem
+
+imagOrig = cv.imread('teste.jpg',0)
+
+
+#Binarização
+
+ret, imagBin = cv.threshold(imagOrig,0,255,cv.THRESH_OTSU)
+
+#Dilatação
+
+imagDilat = cv.dilate(imagBin,kernel,iterations=1)
+
+#Erosao
+
+imagErod = cv.erode(imagBin,kernel,iterations=1)
+
+#Detecçao de bordas
+
+#Simplesmente a diferença entre a imagem Dilatada e Erodida
+
+detecBordas = imagDilat - imagErod
+
+#Abertura
+#Operação de inicialmente realizar uma erosão na imagagem e posteriormente uma dilatação
+
+imgAbertura = cv.dilate(imagErod, kernel, iterations=1)
+
+#Fechamento
+#Contário da abertura. Aplica-se a dilatação depois a erosão
+
+imgFechamento = cv.erode(imagDilat, kernel, iterations=1)
+
+
+#Imagem Original
+plt.figure(1), plt.title('Imagem Binarizada')
+plt.imshow(imagBin, cmap='gray')
+
+#Imagem Dilatada
+plt.figure(2), plt.title('Imagem Dilatada')
+plt.imshow(imagDilat, cmap='gray')
+
+#Imagem Erodida
+
+plt.figure(3), plt.title('Imagem Erodida')
+plt.imshow(imagErod, cmap='gray')
+
+#Detecção de Bordas
+
+plt.figure(4), plt.title('Detecção de Bordas')
+plt.imshow(detecBordas, cmap='gray')
+
+#Aplicaçao de abertura
+
+plt.figure(5), plt.title('Imagem após aplicação de abertura')
+plt.imshow(imgAbertura, cmap='gray')
+
+#Aplicação de Fechamento
+
+plt.figure(6), plt.title('Imagem após aplicação de fechamento')
+plt.imshow(imgAbertura, cmap='gray')
+
+
+plt.show()
+
