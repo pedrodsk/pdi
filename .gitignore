@@ -2,3 +2,5 @@
 **/imagens
 **/.ipynb_checkpoints
 **/flickr
+**/__pycache__
+**/bases
